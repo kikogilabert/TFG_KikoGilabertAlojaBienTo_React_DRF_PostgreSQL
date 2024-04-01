@@ -1,26 +1,59 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { useNavigate } from "react-router-dom";
+import { GoogleReCaptchaProvider, GoogleReCaptcha } from "react-google-recaptcha-v3";
+import Styles from './login.module.css';
+import { signInWithPopup } from 'firebase/auth';
+import { auth, googleProvider } from '../../firebase';
 
-function LoginModal({show, handleClose, onAddUser, onLoginUser}){
+
+function LoginModal({show, handleClose, onAddUser, onLoginUser, SocialLogin}){
+
+
+
+    const [token, setToken] = useState("");
+    const [refreshReCaptcha, setRefreshReCaptcha] = useState(false);
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
     const [form_type, setForm_type] = useState('login');
-    // const handleClose = () => setShow(false);
-    // const handleShow = () => setShow(true);
+    
+    const signInGoogle = () => {
+      signInWithPopup(auth, googleProvider)
+            .then((result) => {
+              console.log(result.user);
+              let user = {
+                username: result.user.displayName,
+                email: result.user.email,
+                password: result.user.uid,
+                is_google_user: true
+              };
+              SocialLogin(user);
+            })
+            .catch((error) => {
+              console.log(error);
+            }); 
+      };
+
 
   const handleSubmit = (e) => {
-        if(form_type === 'login'){
+        e.preventDefault();
+        try{
+          if(form_type === 'login'){
             const userdata = { username, password };
             onLoginUser(userdata);
         }else{
             const newuserdata = { username, email, password };
             onAddUser(newuserdata);
         }
+        }catch(e){
+          setRefreshReCaptcha(!refreshReCaptcha);
+          console.log(e);
+        }
+     
   };
 
 
@@ -46,12 +79,20 @@ function LoginModal({show, handleClose, onAddUser, onLoginUser}){
     setPassword(e.target.value);
   };
 
+  const onVerify = useCallback((token) => {
+    setToken(token);
+  }, []);
+
+  // const setTokenFunc = (getToken) => {
+  //   // console.log(getToken);
+  //   setToken(getToken);
+  // };
 
   return (
         <>
       <Modal show={show} onHide={handleClose} form_type={form_type}
         backdrop="static"
-        keyboard={false}>
+        keyboard={true}>
         <Modal.Header closeButton>
         {form_type === 'login' && (
           <Modal.Title>Log In</Modal.Title>
@@ -85,7 +126,16 @@ function LoginModal({show, handleClose, onAddUser, onLoginUser}){
                   <Form.Control value={password} type="password" onChange={handlePasswordChange} />
               </Form.Group>
             )}
+          <GoogleReCaptchaProvider reCaptchaKey={"6LdzV8oeAAAAAM23NDLgb2WItZGqLaW-9UW31u85"}>
+          <GoogleReCaptcha
+            className={Styles.recaptcha}
+            onVerify={onVerify}
+            refreshReCaptcha={refreshReCaptcha}
+          />
+        </GoogleReCaptchaProvider>
           </Form>
+          <Button onClick={signInGoogle} className={Styles.googleButton}>Sign in with Google</Button>
+          {/* <Button onClick={signInGoogle} className={Styles.googleButton}>Sign in with Facebook</Button> */}
         </Modal.Body>
       <Modal.Footer>
       {form_type === 'login' && (

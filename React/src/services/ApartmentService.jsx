@@ -22,6 +22,14 @@ const CitiesService = {
     },
     getOneApartmentById(id) {
         return api().get(`apartment_id/${id}`)
+    },
+    getAvailableCities() {
+        return api().get(`apartments/av_cities/`)
+    },
+    filterRoomsApartments(rooms) {
+        // return filters;
+        return api().post(`apartments/bedrooms/`, rooms)
     }
+
 };
 export default CitiesService;

@@ -21,7 +21,6 @@ export default function ListApartments({ AllApartments }) {
   }
 
   const handleCityClick = (slug_apartment) => {
-    // console.log(slug_apartment);
     navigate('/apartment_details/' + slug_apartment)
   };
 
@@ -29,7 +28,7 @@ export default function ListApartments({ AllApartments }) {
       <>
         <br></br><br></br>
         <br></br>
-        <div className="w3-row-padding w3-margin-top">
+        <div className="w3-row-padding w3-margin-top" style={{display: 'flex', justifyContent: 'space-around'}}>
           {AllApartments.map(apartment => (
               <CardHomeApartments key={apartment.id} apartment={apartment} onClick={handleCityClick}/>
             ))}

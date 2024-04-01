@@ -30,4 +30,14 @@ urlpatterns = [
     path('apartments/', ApartmentView.as_view({'post': 'post'})),
     path('apartments/<str:slug_apartment>', ApartmentView.as_view({'delete': 'delete'})),
     path('apartments/<str:slug_apartment>', ApartmentView.as_view({'put': 'put'})),
+    
+    path('apartments/city/<str:slug_city>', ApartmentView.as_view({'get': 'getApartmentsByCity'})),
+    path('apartments/bedrooms/', ApartmentView.as_view({'post': 'getApartmentsByBedrooms'})),
+    path('apartments/bathrooms/', ApartmentView.as_view({'get': 'getApartmentsByBathrooms'})),
+    path('apartments/size/', ApartmentView.as_view({'get': 'getApartmentsBySize'})),
+    path('apartments/price/', ApartmentView.as_view({'get': 'getApartmentsByPriceRange'})),
+
+    path('apartments/av_cities/', ApartmentView.as_view({'get': 'getAvailableCitiesFromApartments'})),
+    path('apartments/filters/', ApartmentView.as_view({'get': 'getfilteredApartments'})),
+
 ]

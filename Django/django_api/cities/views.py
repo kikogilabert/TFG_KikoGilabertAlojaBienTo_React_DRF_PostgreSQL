@@ -11,7 +11,7 @@ from rest_framework import viewsets
 
 
 from .models import City 
-from .serializers import CitySerializer
+from .serializers import CityNameSerializer, CitySerializer
 
 from .models import Zone
 from .serializers import ZoneSerializer
@@ -260,3 +260,102 @@ class ApartmentView(viewsets.GenericViewSet):
                 return JsonResponse(apartments_serializer.data, safe=False)
             except Zone.DoesNotExist:
                 return JsonResponse({'error': 'Zone not found'}, status=status.HTTP_404_NOT_FOUND)
+            
+
+            
+
+        def getfilteredApartments(request):
+            if request.method == 'POST':
+                filters = request.data
+
+                if 'min_price' in filters and 'max_price' in filters:
+                    filters['price__range'] = (filters.pop('min_price'), filters.pop('max_price'))
+
+                try:
+                    apartments = Apartment.objects.filter(**filters)
+                    serializer = ApartmentSerializer(apartments, many=True)
+                    return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
+                except Apartment.DoesNotExist:
+                    return JsonResponse({'error': 'Apartments not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+        
+
+        #______________________________GET APARTMENTS BY CITY______________________________________________________________
+        
+        # def getApartmentsByCity(self,request, slug_city):   
+        #     try:
+        #         city = City.objects.get(slug=slug_city)
+        #         zones = Zone.objects.filter(city=city)
+        #         apartments = Apartment.objects.filter(zone__in=zones)
+        #         apartments_serializer = ApartmentSerializer(apartments, many=True)
+        #         return JsonResponse(apartments_serializer.data, safe=False)
+        #     except City.DoesNotExist:
+        #         return JsonResponse({'error': 'City not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        # #______________________________GET APARTMENTS BY BEDROOMS______________________________________________________________
+        
+        # def getApartmentsByBedrooms(self,request, ):
+        #     # print(request.data)
+        #     # print('hoplaaasamkaljsakoljdfakljsdkajkldasjkldasjklsdajklasdjklsdajklasdjkldasjklasdjkl')
+        #     rooms = request.data['rooms']
+        #     print(rooms)
+        #     try:
+        #         apartments = Apartment.objects.filter(rooms=rooms)
+        #         apartments_serializer = ApartmentSerializer(apartments, many=True)
+        #         return JsonResponse(apartments_serializer.data, safe=False, status=status.HTTP_200_OK)
+        #     except Apartment.DoesNotExist:
+        #         return JsonResponse({'error': 'Apartments not found'}, status=status.HTTP_404_NOT_FOUND)
+            
+        # #______________________________GET APARTMENTS BY BATHROOMS______________________________________________________________
+        
+        # def getApartmentsByBathrooms(self,request):   
+        #     bathrooms = request.data['bathrooms']
+        #     try:
+        #         apartments = Apartment.objects.filter(bathrooms=bathrooms)
+        #         apartments_serializer = ApartmentSerializer(apartments, many=True)
+        #         return JsonResponse(apartments_serializer.data, safe=False)
+        #     except Apartment.DoesNotExist:
+        #         return JsonResponse({'error': 'Apartments not found'}, status=status.HTTP_404_NOT_FOUND)
+            
+
+        # #______________________________GET APARTMENTS BY MORE THAN THIS SIZE______________________________________________________________
+        
+        # def getApartmentsBySize(self,request):
+        #     size = request.data['size']
+        #     try:
+        #         apartments = Apartment.objects.filter(size__gt=size)
+        #         apartments_serializer = ApartmentSerializer(apartments, many=True)
+        #         return JsonResponse(apartments_serializer.data, safe=False)
+        #     except Apartment.DoesNotExist:
+        #         return JsonResponse({'error': 'Apartments not found'}, status=status.HTTP_404_NOT_FOUND)
+            
+        # #______________________________GET APARTMENTS BY RANGE OF PRICE______________________________________________________________
+
+        # def getApartmentsByPriceRange(self,request):
+        #     price_min = request.data['price_min']
+        #     price_max = request.data['price_max']
+        #     try:
+        #         apartments = Apartment.objects.filter(price__range=(price_min, price_max))
+        #         apartments_serializer = ApartmentSerializer(apartments, many=True)
+        #         return JsonResponse(apartments_serializer.data, safe=False)
+        #     except Apartment.DoesNotExist:
+        #         return JsonResponse({'error': 'Apartments not found'}, status=status.HTTP_404_NOT_FOUND)
+            
+
+
+        #______________________________GET CITIES FROM AVAILABLE APARTMENTS______________________________________________________________
+        
+        def getAvailableCitiesFromApartments(self,request):
+            apartments = Apartment.objects.all()
+
+            zone_ids = apartments.values_list('zone', flat=True).distinct()
+
+            zones = Zone.objects.filter(id__in=zone_ids)
+
+            city_ids = zones.values_list('city', flat=True).distinct()
+
+            cities = City.objects.filter(id__in=city_ids)
+            
+            cities_serializer = CityNameSerializer(cities, many=True)
+            return JsonResponse(cities_serializer.data, safe=False)

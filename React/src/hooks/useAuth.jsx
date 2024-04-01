@@ -59,6 +59,30 @@ export function useAuth() {
             });
     }, [setUser]);
 
+
+    const useSocialLogin = useCallback((data) => {
+        console.log(data);
+        AuthService.SocialLogin(data)
+            .then(({ data, status }) => {
+                if (status === 200) {
+                    JwtService.saveToken(data.token);
+                    JwtService.saveRefreshToken(data.ref_token);
+                    setToken(data.token);
+                    setUser(data.user);
+                    setIsAuth(true);
+                    setIsAdmin(data.user.type === 'admin');
+                    setIsCorrect(true);
+                    setTimeout(() => { setIsCorrect(false); }, 1000);
+                }
+            })
+            .catch((e) => {
+                console.error(e);
+                // setErrorMSG(e.response.data[0]);
+                // toast.error(e.response.data[0]);
+            });
+    }, []);
+
+
     const useProfile = useCallback((id) => {
         // console.log(id.id);
         AuthService.getProfile(id.id)
@@ -107,5 +131,5 @@ export function useAuth() {
             });
     }, []);
 
-    return { isCorrect, user, profile, setUser, allUsers, setAllUsers, useRegister, useLogin, useProfile};
+    return { isCorrect, user, profile, setUser, allUsers, setAllUsers, useSocialLogin, useRegister, useLogin, useProfile};
 }

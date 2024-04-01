@@ -15,10 +15,12 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-+q2g0&*d9&lirtlk320^a+i!4#m3z8bp#(t$6#(+r3f==ix%af'
+RECAPTCHA_PUBLIC_KEY = '6LdzV8oeAAAAAM23NDLgb2WItZGqLaW-9UW31u85'
+RECAPTCHA_PRIVATE_KEY = '6LdzV8oeAAAAABMkHkwl5E_AqW--pzh9bukWtFYV'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1' ]
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -73,7 +75,7 @@ DATABASES = {
         'NAME': 'rent_agency', 
         'USER': 'postgres',
         'PASSWORD': '12345',
-        'HOST': '127.0.0.1', 
+        'HOST': 'localhost', 
         'PORT': '5432',
     }
 }
@@ -116,3 +118,18 @@ REST_FRAMEWORK = {
         'users.backends.JWTAuthentication',
     )
 }
+
+CORS_ALLOWED_ALL_ORIGINS = True
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://localhost",
+    "http://localhost:80",
+    ]
+
+# MIGRATION_MODULES = {
+#     'cities': None,
+#     'users': None,
+#     'reservations': None,
+#     'incidents': None,
+# }

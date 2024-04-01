@@ -24,3 +24,8 @@ class ApartmentSerializer(serializers.ModelSerializer):
         model = Apartment
         fields = ('id','slug','name','location','price','rooms','bathrooms','size','apartment_images','zone')
         read_only_fields = ('id', 'slug')
+
+class CityNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        fields = ('slug', 'name')

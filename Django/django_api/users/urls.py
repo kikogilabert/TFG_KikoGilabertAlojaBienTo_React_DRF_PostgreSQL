@@ -9,6 +9,7 @@ urlpatterns = [
     path('login', UserView.as_view({'post': 'login'})),
     path('user', UserInfoView.as_view({'get': 'getUser'})),
     path('logout', UserInfoView.as_view({'post': 'logout'})),
+    path('social_login', UserView.as_view({'post': 'socialLogin'})),
     # create superuser
     # path('superuser', UserView.as_view({'post': 'superuser'})),
     # path('refresh_token', UserInfoView.as_view({'get': 'refreshToken'})),

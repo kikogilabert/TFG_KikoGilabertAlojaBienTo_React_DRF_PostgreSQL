@@ -11,6 +11,7 @@ class userSerializer(serializers.ModelSerializer):
         username = context['username']
         email = context['email']
         password = context['password']
+        is_google_user = context['is_google_user']
 
         username_exist = len(User.objects.filter(username=username))
         email_exist = len(User.objects.filter(email=email))
@@ -18,13 +19,14 @@ class userSerializer(serializers.ModelSerializer):
         if (email_exist > 0 or username_exist > 0):
             raise serializers.ValidationError('*Username or email already exists.')
 
-        user = User.objects.create_user(email=email, username=username, password=password)
+        user = User.objects.create_user(email=email, username=username, password=password, is_google_user=is_google_user)
 
         return {
             'user': {
                 'id': user.id,
                 'username': user.username,
                 'email': user.email,
+                'is_google_user': user.is_google_user,
                 'type': user.type
             },
             'token': user.token,
@@ -53,6 +55,32 @@ class userSerializer(serializers.ModelSerializer):
             'token': user.token,
             'ref_token': user.ref_token,
         }
+
+    # def socialLogin(context):
+    #     username = context['username']
+    #     email = context['email']
+    #     password = context['password']
+    #     print('context')
+    #     try:
+    #         user = User.objects.get(email=email)
+    #         if user:
+    #             if user.is_google_user:
+    #                 login_context = {'username': username, 'password': password}
+    #                 # return login(login_context)
+    #             else:
+    #                 raise serializers.ValidationError('*Username or email already exists.')
+    #     except User.DoesNotExist:
+    #         user = User.objects.create_user(email=email, username=username, password=password, is_google_user=True)
+    #         return {
+    #             'user': {
+    #                 'id': user.id,
+    #                 'username': user.username,
+    #                 'email': user.email,
+    #                 'type': user.type
+    #             }
+    #         }
+    
+
 
     def getUser(context):
         username = context['username']

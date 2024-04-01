@@ -37,6 +37,9 @@ const AuthService = {
     deleteUser(uuid) {
         return api().delete(`user/${uuid}`);
     },
+    SocialLogin(data) {
+        return api().post('social_login', { 'user': data });
+    },
 }
 
 export default AuthService;

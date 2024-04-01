@@ -5,8 +5,8 @@ from datetime import datetime, timedelta
 import jwt
 
 class UserManager(BaseUserManager):
-    def create_user(self, username, email, password):
-        user = self.model(email=self.normalize_email(email), username=username)
+    def create_user(self, username, email, password, is_google_user):
+        user = self.model(email=self.normalize_email(email), username=username, is_google_user=is_google_user)
         user.set_password(password)
         user.save()
         return user
@@ -24,6 +24,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField('username', max_length=30, unique=True, null=False)
     email = models.EmailField('email', unique=True)
     type = models.CharField('type', max_length=10, null=False, default='client')
+    is_google_user = models.BooleanField(default=False)
+
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']

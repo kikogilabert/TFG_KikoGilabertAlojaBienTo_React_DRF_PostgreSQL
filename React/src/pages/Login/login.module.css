@@ -1,5 +1,5 @@
 .background {
-    position: fixed;
+    position: relative;
     top: 0;
     left: 0;
     width: 100%;
@@ -7,5 +7,10 @@
     background-image: url('https://images.pexels.com/photos/443446/pexels-photo-443446.jpeg?cs=srgb&dl=pexels-eberhard-grossgasteiger-443446.jpg&fm=jpg');
     background-size: cover;
     background-position: center;
+    z-index: 100;
+}
+
+.recaptcha {
+    position: relative;
     z-index: 999;
 }

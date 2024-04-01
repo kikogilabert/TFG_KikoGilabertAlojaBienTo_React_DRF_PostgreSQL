@@ -6,7 +6,7 @@ import LoginModal from "./login_modal";
 import LoginCSS from "./login.module.css"
 
 const Login = () => {
-    const { isCorrect, useRegister, useLogin } = useAuth();
+    const { isCorrect, useRegister, useLogin, useSocialLogin } = useAuth();
     const handleClose = () => setShow(false);
     const [id, setId] = useState(null);
     const [show, setShow] = useState(true);
@@ -26,19 +26,23 @@ const Login = () => {
 
 
     const emit_register = (userData) => {
-        // console.log(userData.username, userData.email, userData.password);
-        useRegister(userData);
+            useRegister(userData);
     }
 
     const emit_login = (userdata) => {
-            // console.log(userdata.username, userdata.password);
             useLogin(userdata);
     }
+
+    const emit_sociallogin = (userdata) => {
+            useSocialLogin(userdata);
+        // console.log(userdata);
+    }
+
 
     return (
         <>
             <div className={LoginCSS.background}>
-                <LoginModal form_type={form_type} show={show} onAddUser={emit_register} onLoginUser={emit_login} handleClose={handleClose} />
+                <LoginModal form_type={form_type} show={show} onAddUser={emit_register} onLoginUser={emit_login} SocialLogin={emit_sociallogin} handleClose={handleClose} />
             </div>        
         </>
     )

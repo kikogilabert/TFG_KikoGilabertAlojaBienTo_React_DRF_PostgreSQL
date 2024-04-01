@@ -1,28 +1,57 @@
 from django.shortcuts import render
 from rest_framework.response import Response
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from .serializers import userSerializer
 from .serializers import ProfileSerializer
+from django.contrib.auth import authenticate, login
 from .models import User
 from .models import Profile
 from rest_framework.permissions import (AllowAny, IsAuthenticatedOrReadOnly, IsAuthenticated, IsAdminUser)
-# from .core.permissions import IsAdmin
+
 
 class UserView(viewsets.GenericViewSet):
     permission_classes = (AllowAny,)
+
     def register(self, request):
         data = request.data['user']
 
         serializer_context = {
             'username': data['username'],
             'email': data['email'],
-            'password': data['password']
+            'password': data['password'],
+            'is_google_user': data['is_google_user']
         }
 
         serializer = userSerializer.register(serializer_context)
         ProfileSerializer.create(context=serializer['user'])
         
         return Response(serializer)
+
+
+
+    def socialLogin(self, request):
+        data = request.data['user']
+        serializer_context = {
+                'username': data['username'],
+                'email': data['email'],
+                'password': data['password'],
+                'is_google_user': data['is_google_user']
+                }
+        try:
+            user = User.objects.get(email=data['email']) # Buscamos el email en la base de datos
+            if user.is_google_user: # si existe el email, miramos si es un usuario de Google
+                # Si es un usuario de Google, realizamos el login
+                serializer = userSerializer.login(serializer_context)
+                return Response(serializer)
+                
+            else: # Si no es un usuario de Google, devolvemos un error indicando que ya se ha usado este email de manera manual
+                return Response({"error": "Este email ya está registrado manualmente"}, status=status.HTTP_400_BAD_REQUEST)
+        except User.DoesNotExist:
+            # Si el email no está registrado, creamos un nuevo usuario
+            serializer = userSerializer.register(serializer_context)
+            ProfileSerializer.create(context=serializer['user'])
+            return Response(serializer)
+
 
     def login(self, request):
         data = request.data['user']

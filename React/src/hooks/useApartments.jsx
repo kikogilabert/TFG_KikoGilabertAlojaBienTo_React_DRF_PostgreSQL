@@ -85,5 +85,37 @@ const useUpdateApartment = useCallback((slug, data) => {
         });
 }, []);
 
-return { apartments, setApartments, addApartment, useDeleteApartment, useUpdateApartment, useOneApartment, oneApartment };
+
+const useFilterApartments = useCallback((data) => {
+    let filterData = {
+        price: data.price|| "",
+        rooms: data.rooms || "",
+        city: data.city || "",
+        bathrooms: data.bathrooms|| "",
+        size: data.size|| "",
+        zone: data.zone|| ""
+    }
+
+    console.log(filterData);
+
+    for (let key in filterData) {
+        if (filterData[key] === "") {
+            delete filterData[key];
+        }
+    }
+
+    console.log(filterData);
+
+    // ApartmentService.filterRoomsApartments(filterData)
+    //     .then(({ data, status }) => {
+    //         console.log(data);
+    //         console.log(status); 
+    //         setApartments(data);
+    //     })
+    //     .catch(e => console.error(e));
+
+
+},[]);
+
+return { useFilterApartments, apartments, setApartments, addApartment, useDeleteApartment, useUpdateApartment, useOneApartment, oneApartment };
 }
