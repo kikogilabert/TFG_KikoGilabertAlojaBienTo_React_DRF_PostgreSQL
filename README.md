@@ -1,18 +1,19 @@
-# 🚲 GreenWheels
+# 🏢 AlojaBienTo2
 
 ## Indice:
 
-1. ¿Que es GreenWheels?
+1. ¿Que es AlojaBienTo2?
 2. Tecnologias implementadas
 3. Desarrollo de los modulos
 
-# 🔹 GreenWheels:  
+# AlojaBienTo2:  
 
-Bienvenidos a GreenWheels, es un proyecto desarrollado y diseñado por [`Vicent Esteve`](https://github.com/Vicent29). Fue creado para cubrir las necesidades de rentas de bicis. Por una parte, los usuarios tendrán la posibilidad de visualizar donde estan las estaciones ya que en la misma página principal tenemos un mapa, también podemos realizar rentas sobre una bici situada en un slot de una estación. Por otra parte, hemos implementado un panel de Administrador que se encarga de gestionar las incidencias, los usuarios, los slots, las estaciones y las bicis. Además de muchas mejoras, por ejemplo podrás recibir notificaciones por Telegram sobre las incidencias que has enviado e informacion sobre problemas u otras cosas de la applicación/estaciones...
+ AlojaBienTo2 es un proyecto desarrollado y diseñado por [`Kiko Gilabert Mañó`](https://github.com/kikogilabert). Fue creado para cubrir las necesidades del alquiler vacacional de apartamentos. Por una parte, los usuarios tendrán la posibilidad de alquilar y reservar distintos apartamentos en diferentes ubicaciones y fechas. Además, hemos implementado un panel de Administrador que se encarga de gestionar los apartamentos, zonas, ciudades, reservas, usuarios, notificaciones y incidencias. Por último, hemos añadido un login y register para que los usuarios puedan registrarse y loguearse en la aplicación, tanto de manera local como de manera social con Google y Facebook.
+
 
 # 🔹 Documentación:  
 
-En el enlace [DOCUMENTACIÓN](https://drive.google.com/file/d/1DZraVh4FEqKe8rpGFifbI6xGvnF49dO-/view?usp=sharing)  encontrarás la documentación completa del proyecto GreenWheels, que incluye análisis y requerimientos detallados, así como los aspectos más importantes de la aplicación. Esta documentación te permitirá comprender en detalle cómo se ha planificado y desarrollado el proyecto, brindando información esencial para su implementación exitosa. Es una fuente valiosa para aquellos interesados en conocer los análisis y requisitos clave, así como los aspectos destacados de la aplicación en el contexto del proyecto GreenWheels.
+En el enlace [DOCUMENTACIÓN](#) encontrarás la documentación completa del proyecto AlojaBiento2, que incluye análisis y requerimientos detallados, así como los aspectos más importantes de la aplicación. Esta documentación te permitirá comprender en detalle cómo se ha planificado y desarrollado el proyecto, brindando información esencial para su implementación exitosa. Es una fuente valiosa para aquellos interesados en conocer los análisis y requisitos clave, así como los aspectos destacados de la aplicación en el contexto del proyecto AlojaBiento2.
 
 # 🔹 Tecnologías:
 
@@ -26,11 +27,10 @@ En el enlace [DOCUMENTACIÓN](https://drive.google.com/file/d/1DZraVh4FEqKe8rpGF
 - ### [Django Rest FW](https://www.django-rest-framework.org) 
 
   - Migrations
-  - Dummies
   - Models
   - Views
   - Serializers
-  - Mysql
+  - Postgresql
     - Relationships
     - Schema
   - Middleware_auth
@@ -40,45 +40,53 @@ En el enlace [DOCUMENTACIÓN](https://drive.google.com/file/d/1DZraVh4FEqKe8rpGF
 ## 🔸 Frontend
 
 - ### [React 18](https://es.reactjs.org)
-  
-  - Reactive Forms
-    - react-hook-form
+
   - Lazy load
   - Guards
   - Service with axios
   - Authentication JWT
   - Context
   - Hooks
-  - Custom infinity scroll
+  - Custom notifications
   - Librerias:
     - Bootstrap
     - Tailwind
-    - Toaster
     - FontAwesome
-    - Mapbox-gl
-    
+    - Recaptcha v3
+    - Firebase
 
 ## 🔸 Base de datos:
 
-  - [MySQL](https://www.mysql.com/)
+  - [PostgreSQL](https://www.postgresql.org/)
 
 # 🔹 Desarrollo de los modulos:  
 
 ##  📌  Home
-  - Es la página principal, a primera vista podemos ver un mapa con todas las estaciones marcadas y un about us que explica nuestra empresa, al seleccionar un marker del mapa mostrado [Mapbox](https://www.mapbox.com) podemos ver las bicis disponibles en esa misma estación
-##  📝  Rents
-  - Es la vista que al dar click sobre el marker en el mapa nos muestra las bicis disponibles en esa estación. Al darle click a una de las bicis disponibles, nos saldra la opción de poder rentarla (Cabe recalcar, que no puedes rentar dos bicis a la vez).
-##  🔑   Login/Register
-- Son la views que el usuario tendrá la opción de registrarse y loguearse, hemos utilizado formularios de [Boostrap](https://getbootstrap.com), [Tailwind](https://tailwindcss.com) y  [`react-hook-form`](https://react-hook-form.com) para controlar que se cumplan los requerimientos en ambas views.
+  - Es la página principal, a primera vista podemos ver un apartado con las ciudades mas destacadas y un about us que explica nuestra empresa, mas abajo tenemos un apartado de los apartamentos mas destacados.
+  ![Foto Home](image.png)
+
+##  🏙  Cities
+  - En esta vista podremos ver todas las ciudades disponibles, y al hacer click en una de ellas nos redirigira a todas las zonas con apartamentos disponibles en el momento de dicha ciudad.
+  ![Foto Cities](image.png)
+
+##  🏠  Zones
+  - En esta vista podremos ver todas las zonas disponibles, y al hacer click en una de ellas nos redirigira a todos los apartamentos disponibles en el momento de dicha zona.
+  ![Foto Zones](image.png)
+
+##  📝  Rents/Apartments
+  - Es de las vistas mas importantes, en ella podremos ver todos los apartamentos disponibles, filtrar por ciudad, habitaciones y baños.
+  ![Foto Filtros](image.png)
+
+  - Ademas podremos ver la información de cada apartamento y reservarlo si esta disponible.
+
+##  🔑 Login/Register
+- Son la views que el usuario tendrá la opción de registrarse y loguearse, hemos utilizado modales y formularios de [React-Boostrap](https://react-bootstrap.netlify.app/docs/components/modal/), para que el usuario pueda loguearse de manera sencilla y rápida. Además, hemos añadido la opción de loguearse con Google y Facebook, para que el usuario pueda acceder a la aplicación de manera más rápida y sencilla.
+
 ## 👨🏼‍🦱  Profile
--  Encontraremos todos los datos del usuario, tendrá la opción de modificarlos. Por otra parte, hemos añadido una funcionalidad para que recibas notificaciones por [`Telegram`](https://core.telegram.org/bots/api) para poder recibir informacion sobre las incidencias realizadas e informacion externa sobre nuestro producto. Ademas, podras ver un historial de tus rentas de mas nuevas a mas antiguas y podrás cerrar una renta de una bici podiendo seleccionar cualquiera de los slots libres.
-- Por la parte del administrador, podras ver todas las incidencias realizadas por el usuario y que no tienen aun una respuesta. Ese mismo administrador, puede responder una incidencia que le generara una notificación al usuario y si el usuario tiene el Telegram vinculado, también recibira la notificación
+-  Encontraremos todos los datos del usuario, podremos ver las resevas realizadas y las notificaciones, tanto vistas como por ver.
 
 ## 📩  Notifications
 - En header tendremos una opción que se encargará de avisarte de cuándo tienes alguna notificación sobre las reservas y tienes un desplegable en el que visualizar las notificaciones una vez entres.
 
-## 💭  Announce
-- Es la vista que solo puede ver el usuario administrador y que realiza una notificacion mediante Telegram a todos los usuarios con el chat vinculado
-
 ## 📎 Dashboard Admin
-- En la view de Dashboard podremos ver un registro de (Bicis / Slots / Estaciones / Usuarios) en los cuales el administrador podrá modificar, crear y borrar según le resulte necesario.
+- En la view de Dashboard podremos ver un registro de (Apartments / Zones / Cities / Users) en los cuales el administrador podrá modificar, crear y borrar según le resulte necesario.
