@@ -26,10 +26,9 @@ const CitiesService = {
     getAvailableCities() {
         return api().get(`apartments/av_cities/`)
     },
-    filterRoomsApartments(rooms) {
-        // return filters;
-        return api().post(`apartments/bedrooms/`, rooms)
-    }
 
+    sendFiltersApartments(filters) {
+        return api().post(`apartments/filters/`, filters)
+    }
 };
 export default CitiesService;

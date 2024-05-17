@@ -5,6 +5,7 @@ const Context = React.createContext({});
 
 export function ApartmentContextProvider({children}) {
     const [apartments, setApartments] = useState([]);
+    const [ shouldUpdate, setShouldUpdate ] = useState(false);
 
     useEffect(() => {
         ApartmentService.getAllApartments()

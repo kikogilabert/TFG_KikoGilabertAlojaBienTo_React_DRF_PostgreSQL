@@ -24,11 +24,16 @@ export default function ListApartments({ AllApartments }) {
     navigate('/apartment_details/' + slug_apartment)
   };
 
+
     return (
       <>
         <br></br><br></br>
         <br></br>
-        <div className="w3-row-padding w3-margin-top" style={{display: 'flex', justifyContent: 'space-around'}}>
+        <div className="w3-row-padding w3-margin-top" style={{display: 'flex', flexWrap: 'wrap' ,justifyContent: '', alignItems: 'flex-tart'}}>
+          {
+            AllApartments.length === 0 && <h1>There are not available apartment with this filters at the moment, <br /> try later...  </h1>
+          }
+
           {AllApartments.map(apartment => (
               <CardHomeApartments key={apartment.id} apartment={apartment} onClick={handleCityClick}/>
             ))}

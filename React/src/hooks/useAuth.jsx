@@ -77,8 +77,6 @@ export function useAuth() {
             })
             .catch((e) => {
                 console.error(e);
-                // setErrorMSG(e.response.data[0]);
-                // toast.error(e.response.data[0]);
             });
     }, []);
 

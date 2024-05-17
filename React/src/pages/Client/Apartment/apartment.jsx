@@ -13,7 +13,6 @@ export default function apartment() {
         ApartmentService.getAllApartments()
             .then(response => {
                 setApartments(response.data);
-                // console.log(response.data);
             })
             .catch(e => {
                 console.log(e);
@@ -22,7 +21,7 @@ export default function apartment() {
 
     return (
     <article style={{marginTop: '90px'}}>
-            <Filters  />
+            <Filters />
             <ListApartments AllApartments={apartments}/>
     </article>
     )

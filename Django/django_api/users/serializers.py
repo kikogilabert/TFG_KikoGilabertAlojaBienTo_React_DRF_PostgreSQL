@@ -50,6 +50,7 @@ class userSerializer(serializers.ModelSerializer):
                 'id': user.id,
                 'username': user.username,
                 'email': user.email,
+                'is_google_user': user.is_google_user,
                 'type': user.type
             },
             'token': user.token,

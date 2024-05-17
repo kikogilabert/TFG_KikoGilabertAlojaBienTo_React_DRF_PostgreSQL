@@ -65,8 +65,6 @@ export default function Header() {
                     <a className="w3-bar-item w3-button"> <NotificationBell/></a>
                     <a onClick={() => redirects.profile()} className="w3-bar-item w3-button"> <FontAwesomeIcon icon={faUser} /> {user.username} </a>
                     <a onClick={() => redirects.logout()} className="w3-bar-item w3-button">Logout <FontAwesomeIcon icon={faArrowRightToBracket} /></a>
-
-                    {/* {isAuth && <a onClick={() => logout()} className="w3-bar-item w3-button">Logout</a>} */}
                     </>} 
                 </div>
                 {!isAuth && 

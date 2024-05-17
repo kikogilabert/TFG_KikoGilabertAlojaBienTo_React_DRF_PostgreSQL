@@ -38,6 +38,7 @@ urlpatterns = [
     path('apartments/price/', ApartmentView.as_view({'get': 'getApartmentsByPriceRange'})),
 
     path('apartments/av_cities/', ApartmentView.as_view({'get': 'getAvailableCitiesFromApartments'})),
-    path('apartments/filters/', ApartmentView.as_view({'get': 'getfilteredApartments'})),
+
+    path('apartments/filters/', ApartmentView.as_view({'post': 'getfilteredApartments'})),
 
 ]

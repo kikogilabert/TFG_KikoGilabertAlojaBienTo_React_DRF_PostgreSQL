@@ -4,7 +4,8 @@ from django.http import HttpResponse
 from rest_framework.parsers import JSONParser 
 from rest_framework import status
 from django.urls import reverse
-from rest_framework import serializers 
+from rest_framework import serializers
+from django.db.models import Q
 
 from rest_framework.response import Response
 from rest_framework import viewsets
@@ -260,25 +261,51 @@ class ApartmentView(viewsets.GenericViewSet):
                 return JsonResponse(apartments_serializer.data, safe=False)
             except Zone.DoesNotExist:
                 return JsonResponse({'error': 'Zone not found'}, status=status.HTTP_404_NOT_FOUND)
-            
+        
 
-            
-
-        def getfilteredApartments(request):
+        def getfilteredApartments(self, request):
             if request.method == 'POST':
-                filters = request.data
+                filters = Q()  # Inicializamos un objeto Q
 
-                if 'min_price' in filters and 'max_price' in filters:
-                    filters['price__range'] = (filters.pop('min_price'), filters.pop('max_price'))
+                #  Para cada uno de los campos que se envíen en el request, se añade una condición al objeto Q
+                if 'rooms' in request.data and request.data['rooms'] not in [None, ""]:
+                    filters &= Q(rooms=request.data['rooms'])
+                if 'bathrooms' in request.data and request.data['bathrooms']not in [None, ""]:
+                    filters &= Q(bathrooms=request.data['bathrooms'])
+                if 'city' in request.data and request.data['city'] not in [None, ""]:
+                    city_slug = request.data['city']
+                    city = City.objects.get(slug=city_slug) #get the city object
 
-                try:
-                    apartments = Apartment.objects.filter(**filters)
-                    serializer = ApartmentSerializer(apartments, many=True)
-                    return JsonResponse(serializer.data, safe=False, status=status.HTTP_200_OK)
-                except Apartment.DoesNotExist:
-                    return JsonResponse({'error': 'Apartments not found'}, status=status.HTTP_404_NOT_FOUND)
+                    zones = Zone.objects.filter(city=city)
+                    print(zones)
+                    filters &= Q(zone__in=zones)
+                    print( 'this are the filters', filters)
+
+                # Con el objeto Q lleno, se filtran los apartamentos
+                apartments = Apartment.objects.filter(filters)
+
+                # Serializamos los apartamentos y los devolvemos al frontend
+                apartments_serializer = ApartmentSerializer(apartments, many=True)
+                return JsonResponse(apartments_serializer.data, safe=False)
+
+            else:
+                return JsonResponse({'error': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            
 
 
+        def getAvailableCitiesFromApartments(self,request):
+            apartments = Apartment.objects.all()
+
+            zone_ids = apartments.values_list('zone', flat=True).distinct()
+
+            zones = Zone.objects.filter(id__in=zone_ids)
+
+            city_ids = zones.values_list('city', flat=True).distinct()
+
+            cities = City.objects.filter(id__in=city_ids)
+            
+            cities_serializer = CityNameSerializer(cities, many=True)
+            return JsonResponse(cities_serializer.data, safe=False)
         
 
         #______________________________GET APARTMENTS BY CITY______________________________________________________________
@@ -346,16 +373,3 @@ class ApartmentView(viewsets.GenericViewSet):
 
         #______________________________GET CITIES FROM AVAILABLE APARTMENTS______________________________________________________________
         
-        def getAvailableCitiesFromApartments(self,request):
-            apartments = Apartment.objects.all()
-
-            zone_ids = apartments.values_list('zone', flat=True).distinct()
-
-            zones = Zone.objects.filter(id__in=zone_ids)
-
-            city_ids = zones.values_list('city', flat=True).distinct()
-
-            cities = City.objects.filter(id__in=city_ids)
-            
-            cities_serializer = CityNameSerializer(cities, many=True)
-            return JsonResponse(cities_serializer.data, safe=False)

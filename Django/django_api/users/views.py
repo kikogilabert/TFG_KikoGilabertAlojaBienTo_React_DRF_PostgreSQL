@@ -44,7 +44,7 @@ class UserView(viewsets.GenericViewSet):
                 serializer = userSerializer.login(serializer_context)
                 return Response(serializer)
                 
-            else: # Si no es un usuario de Google, devolvemos un error indicando que ya se ha usado este email de manera manual
+            else: # Si no es un usuario de Google, devolvemos un error indicando que ya se ha usado este email de manera "manual"
                 return Response({"error": "Este email ya está registrado manualmente"}, status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
             # Si el email no está registrado, creamos un nuevo usuario

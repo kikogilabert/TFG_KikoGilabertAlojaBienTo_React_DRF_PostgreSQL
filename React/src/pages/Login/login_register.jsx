@@ -35,7 +35,6 @@ const Login = () => {
 
     const emit_sociallogin = (userdata) => {
             useSocialLogin(userdata);
-        // console.log(userdata);
     }
 
 

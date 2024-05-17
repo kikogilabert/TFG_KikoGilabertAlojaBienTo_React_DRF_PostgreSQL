@@ -1,9 +1,19 @@
 @import url("https://www.w3schools.com/w3css/4/w3.css");
 
-.top{
+.top {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
+    display: flex;
+    flex-wrap: wrap;
     z-index: 1000;
+}
+
+/* Styles for screens smaller than or equal to 768px */
+@media (max-width: 768px) {
+    .top {
+        /* Adjust the styles for small screens here */
+        flex-direction: column;
+    }
 }

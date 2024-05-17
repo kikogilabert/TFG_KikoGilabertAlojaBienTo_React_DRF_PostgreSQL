@@ -1,6 +1,6 @@
 \c rent_agency;
 
-CREATE TABLE cities_city (
+CREATE TABLE IF NOT EXISTS cities_city (
     id SERIAL PRIMARY KEY,
     slug VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
@@ -9,7 +9,7 @@ CREATE TABLE cities_city (
     image TEXT NOT NULL
 );
 
-CREATE TABLE cities_zone (
+CREATE TABLE IF NOT EXISTS cities_zone (
     id SERIAL PRIMARY KEY,
     slug VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE cities_zone (
 
 ALTER TABLE cities_zone ADD CONSTRAINT fk_zone_city FOREIGN KEY (city_id) REFERENCES cities_city(id);
 
-CREATE TABLE cities_apartment (
+CREATE TABLE IF NOT EXISTS cities_apartment (
     id SERIAL PRIMARY KEY,
     slug VARCHAR(30) NOT NULL,
     name VARCHAR(255) NULL,
@@ -36,7 +36,7 @@ CREATE TABLE cities_apartment (
 ALTER TABLE cities_apartment ADD CONSTRAINT fk_aparment_zone FOREIGN KEY (zone_id) REFERENCES cities_zone(id);
 
 
-CREATE TABLE users_user (
+CREATE TABLE IF NOT EXISTS users_user (
     id SERIAL PRIMARY KEY,
     password VARCHAR(255) NOT NULL,
     last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -44,10 +44,11 @@ CREATE TABLE users_user (
     uuid VARCHAR(255) NOT NULL,
     username VARCHAR(30) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    type VARCHAR(10) NOT NULL
+    type VARCHAR(10) NOT NULL,
+    is_google_user BOOLEAN DEFAULT FALSE,
     );
 
-CREATE TABLE users_profile (
+CREATE TABLE IF NOT EXISTS users_profile (
     "id" INTEGER PRIMARY KEY,
     "name" VARCHAR(255),
     "surnames" VARCHAR(255),
@@ -57,7 +58,7 @@ CREATE TABLE users_profile (
     FOREIGN KEY ("user_id") REFERENCES users_user("id")
 );
 
-CREATE TABLE reservations_reservation (
+CREATE TABLE IF NOT EXISTS reservations_reservation (
     "id" INTEGER PRIMARY KEY,
     "f_ini" DATE,
     "f_end" DATE,
@@ -67,7 +68,7 @@ CREATE TABLE reservations_reservation (
     FOREIGN KEY ("user_id") REFERENCES users_user("id")
 );
 
-CREATE TABLE incidents_incidenceapartment (
+CREATE TABLE IF NOT EXISTS incidents_incidenceapartment (
     "id" INTEGER PRIMARY KEY,
     "title" VARCHAR(255),
     "status" VARCHAR(255),
@@ -78,7 +79,7 @@ CREATE TABLE incidents_incidenceapartment (
     FOREIGN KEY ("user_id") REFERENCES users_user("id")
 );
 
-CREATE TABLE incidents_notification (
+CREATE TABLE IF NOT EXISTS incidents_notification (
     "id" INTEGER PRIMARY KEY,
     "seen" BOOLEAN,
     "desc" TEXT,
@@ -106,11 +107,11 @@ INSERT INTO cities_apartment VALUES
 (5,'doelw3','','Calle Elvira, 24, Albaicín',950,5,4,170,'{"https://media.istockphoto.com/id/1177797403/es/foto/modernos-edificios-de-apartamentos-en-un-d%C3%ADa-soleado-con-un-cielo-azul.jpg?s=612x612&w=0&k=20&c=Fra2VpMhyZ7Zl11TZqQ6EBoj3k3_ramtPWUayVW1Nmg","https://media.istockphoto.com/id/1182454657/es/foto/interior-de-la-sala-de-estar-bohemia-renderizado-3d.jpg?s=612x612&w=0&k=20&c=tX-OH_elOIg1yNoGAuyLWybC6hKX02B2kEEq7RI02ug","https://media.istockphoto.com/id/1289883686/es/foto/amplio-apartamento-con-ventana-de-pared.jpg?s=612x612&w=0&k=20&c=zNAdPrSCCetx54G2Tk-ONxAakgNMEeKqW59775eX118","https://media.istockphoto.com/id/1036068800/es/foto/eco-algod%C3%B3n-lino-y-manta-sobre-una-cama-en-la-naturaleza-amantes-de-la-casa-de-hu%C3%A9spedes.jpg?s=612x612&w=0&k=20&c=MLmIrhmBS0GCX-dHswCbGFl7vdO7AYSrSU4-iLqdTMs"}',3);
 
 INSERT INTO users_user VALUES
-(32, 'pbkdf2_sha256$720000$LiQUXlDLLyubWwPONT6a7R$Gu0duOztluni2TSEQi28l9vpkXS92w5CWN+TtrdAo9g=', NULL, true, 'eb738adf-b236-3728-fa72-a80b80811d61', 'Kiko', 'kiko@gmail.com', 'admin'),
-(37, 'pbkdf2_sha256$720000$xDHXMm4WOM01BRBWES8RMK$YtbFXt/Z09TCVjh4Y5GCpwUAd4Nvw0OQq8L6UXAHjyw=', NULL, false, '84f8e9e0-d528-e3d8-234c-db0d676f76fe', 'alberto2', 'pruvdawdwa2@gmail.com', 'client'),
-(38, 'pbkdf2_sha256$720000$9xxODxbh3tuMPmU9CI0lcQ$JeHws9IZoT/oHsEahXe4aUF0iqL2qN5buUrkKvwsZGo=', NULL, false, 'b5470e6f-2f6f-8e80-708d-dd84149396da', 'cliente', 'cliente@gmail.com', 'client'),
-(39, 'pbkdf2_sha256$720000$PjA49ynUjmVKUv5JV9ktqM$DdfQloCbpYdbWWXmWzISCvRi4WPcT16cnqaDJGJE9jY=', NULL, false, '4dc9584a-d167-0b7c-3040-dd0ef215ca59', 'jose', 'jose@gmail.com', 'client'),
-(40, 'pbkdf2_sha256$720000$x5IrwCAh2OJVoImnvV8wOL$gh4JbbNMpZbQDYyw1CiXEj9pKhx90bi16wVIwBjlKtQ=', NULL, false, '7008de65-23c8-9111-210d-dfa38e29fdac', 'yomogan', 'yomogan@gmail.com', 'client');
+(32, 'pbkdf2_sha256$720000$LiQUXlDLLyubWwPONT6a7R$Gu0duOztluni2TSEQi28l9vpkXS92w5CWN+TtrdAo9g=', NULL, true, 'eb738adf-b236-3728-fa72-a80b80811d61', 'Kiko', 'kiko@gmail.com', 'admin', false),
+(37, 'pbkdf2_sha256$720000$xDHXMm4WOM01BRBWES8RMK$YtbFXt/Z09TCVjh4Y5GCpwUAd4Nvw0OQq8L6UXAHjyw=', NULL, false, '84f8e9e0-d528-e3d8-234c-db0d676f76fe', 'alberto2', 'pruvdawdwa2@gmail.com', 'client', false),
+(38, 'pbkdf2_sha256$720000$9xxODxbh3tuMPmU9CI0lcQ$JeHws9IZoT/oHsEahXe4aUF0iqL2qN5buUrkKvwsZGo=', NULL, false, 'b5470e6f-2f6f-8e80-708d-dd84149396da', 'cliente', 'cliente@gmail.com', 'client', false),
+(39, 'pbkdf2_sha256$720000$PjA49ynUjmVKUv5JV9ktqM$DdfQloCbpYdbWWXmWzISCvRi4WPcT16cnqaDJGJE9jY=', NULL, false, '4dc9584a-d167-0b7c-3040-dd0ef215ca59', 'jose', 'jose@gmail.com', 'client', false),
+(40, 'pbkdf2_sha256$720000$x5IrwCAh2OJVoImnvV8wOL$gh4JbbNMpZbQDYyw1CiXEj9pKhx90bi16wVIwBjlKtQ=', NULL, false, '7008de65-23c8-9111-210d-dfa38e29fdac', 'yomogan', 'yomogan@gmail.com', 'client', false);
 
 INSERT INTO users_profile VALUES
 (3, 'alberto2', '', 'https://avatars.dicebear.com/api/adventurer/alberto2.svg', 'lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor.', 37),

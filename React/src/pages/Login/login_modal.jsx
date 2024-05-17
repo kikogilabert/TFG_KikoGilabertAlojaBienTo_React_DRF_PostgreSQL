@@ -5,9 +5,8 @@ import Modal from 'react-bootstrap/Modal';
 import { useNavigate } from "react-router-dom";
 import { GoogleReCaptchaProvider, GoogleReCaptcha } from "react-google-recaptcha-v3";
 import Styles from './login.module.css';
-import { signInWithPopup } from 'firebase/auth';
+import { getAuth, FacebookAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from '../../firebase';
-
 
 function LoginModal({show, handleClose, onAddUser, onLoginUser, SocialLogin}){
 
@@ -126,7 +125,7 @@ function LoginModal({show, handleClose, onAddUser, onLoginUser, SocialLogin}){
                   <Form.Control value={password} type="password" onChange={handlePasswordChange} />
               </Form.Group>
             )}
-          <GoogleReCaptchaProvider reCaptchaKey={"6LdzV8oeAAAAAM23NDLgb2WItZGqLaW-9UW31u85"}>
+          <GoogleReCaptchaProvider reCaptchaKey={import.meta.env.VITE_RECAPTCHA_API_KEY}>
           <GoogleReCaptcha
             className={Styles.recaptcha}
             onVerify={onVerify}
@@ -134,12 +133,15 @@ function LoginModal({show, handleClose, onAddUser, onLoginUser, SocialLogin}){
           />
         </GoogleReCaptchaProvider>
           </Form>
-          <Button onClick={signInGoogle} className={Styles.googleButton}>Sign in with Google</Button>
-          {/* <Button onClick={signInGoogle} className={Styles.googleButton}>Sign in with Facebook</Button> */}
+          {/* Social Login */}
+          <div className={Styles.slogin_icons}>
+          <img onClick={signInGoogle} width={55} height={55} src="https://static-00.iconduck.com/assets.00/google-icon-2048x2048-czn3g8x8.png" />
+          </div>
+    
         </Modal.Body>
       <Modal.Footer>
       {form_type === 'login' && (
-        <a onClick={handleRedirect} className='mb-3'>I do not have an account</a>
+        <a onClick={handleRedirect} className='mb-3'>No account? Register now</a>
       )}
       {form_type === 'register' && (
         <a onClick={handleRedirect} className='mb-3'>Already have an account?</a>

@@ -9,6 +9,18 @@ const { apartments, setApartments } = useContext(ApartmentContext);
 const [oneApartment, setOneApartment] = useState({});
 const navigate = useNavigate();
 
+
+
+const useFilterApartments = useCallback((filters) => {
+    console.log(filters);
+    ApartmentService.sendFiltersApartments(filters)
+        .then(({ data }) => {
+            console.log(data);
+            setApartments(data);
+        })
+        .catch(e => console.error(e));
+}, []);
+
 const useOneApartment = useCallback((slug) => {
     ApartmentService.getOneApartment(slug)
         .then(({data}) => {
@@ -86,36 +98,6 @@ const useUpdateApartment = useCallback((slug, data) => {
 }, []);
 
 
-const useFilterApartments = useCallback((data) => {
-    let filterData = {
-        price: data.price|| "",
-        rooms: data.rooms || "",
-        city: data.city || "",
-        bathrooms: data.bathrooms|| "",
-        size: data.size|| "",
-        zone: data.zone|| ""
-    }
 
-    console.log(filterData);
-
-    for (let key in filterData) {
-        if (filterData[key] === "") {
-            delete filterData[key];
-        }
-    }
-
-    console.log(filterData);
-
-    // ApartmentService.filterRoomsApartments(filterData)
-    //     .then(({ data, status }) => {
-    //         console.log(data);
-    //         console.log(status); 
-    //         setApartments(data);
-    //     })
-    //     .catch(e => console.error(e));
-
-
-},[]);
-
-return { useFilterApartments, apartments, setApartments, addApartment, useDeleteApartment, useUpdateApartment, useOneApartment, oneApartment };
+return {apartments, setApartments, addApartment, useDeleteApartment, useUpdateApartment, useOneApartment, useFilterApartments, oneApartment };
 }
